@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- ============================================================
+	     BASE profile — shared settings for every nudge.
+	     Jamf Pro: Configuration Profile → Application & Custom
+	     Settings, preference domain com.lbg.policynudger.
+	     Scope to all Macs that run the nudger. Per-policy profiles
+	     (com.lbg.policynudger.<name>) override any key below.
+	     Delete a key to fall back to the script default.
+	     ============================================================ -->
+
+	<!-- Default enforcement for every nudge (each nudge profile can override) -->
+	<key>EnforcementDays</key>
+	<integer>5</integer>
+	<key>EnforcementHours</key>
+	<integer>0</integer>
+	<key>DeferralOptions</key>
+	<string>1h,4h,1d,2d</string>
+	<key>MaxDeferrals</key>
+	<integer>0</integer>
+
+	<!-- Timing (minutes) -->
+	<key>PromptTimeoutMinutes</key>
+	<integer>15</integer>
+	<key>EnforcementCountdownMinutes</key>
+	<integer>5</integer>
+	<key>MeetingGraceMinutes</key>
+	<integer>60</integer>
+	<key>FailureRetryMinutes</key>
+	<integer>60</integer>
+
+	<!-- Meeting / presentation detection -->
+	<key>MeetingProcesses</key>
+	<string>CptHost</string>
+	<key>AssertionIgnoreList</key>
+	<string>coreaudiod,powerd,caffeinate,WindowServer</string>
+
+	<!-- Dialog -->
+	<key>Icon</key>
+	<string>SF=arrow.down.app.fill,colour=auto</string>
+	<key>DateFormat</key>
+	<string>+%a %-d %b %Y at %H:%M</string>
+	<key>Title</key>
+	<string>{policyName} is required</string>
+	<key>Message</key>
+	<string>**{policyName} needs to be installed on your Mac.**&lt;br&gt;&lt;br&gt;Hi {userFirstName}, please install it at a time that suits you. Save your work first, as some installs close apps or need a restart.&lt;br&gt;&lt;br&gt;Click **{button1Text}** to start now, or choose when to be reminded and click **{button2Text}**.&lt;br&gt;&lt;br&gt;If it has not been installed by **{deadline}**, it will be installed automatically.</string>
+	<key>InfoBox</key>
+	<string>**Deadline**&lt;br&gt;{deadline}&lt;br&gt;&lt;br&gt;**Time left**&lt;br&gt;{timeRemaining}&lt;br&gt;&lt;br&gt;**Deferrals left**&lt;br&gt;{deferralsRemaining}</string>
+	<key>Button1Text</key>
+	<string>Install Now</string>
+	<key>Button2Text</key>
+	<string>Defer</string>
+	<key>DeferralLabel</key>
+	<string>Remind me in</string>
+	<key>EnforcementTitle</key>
+	<string>{policyName} will now be installed</string>
+	<key>EnforcementMessage</key>
+	<string>**The deadline to install {policyName} has passed.**&lt;br&gt;&lt;br&gt;Installation will start automatically when the timer ends. Please save your work now, or click **{button1Text}** to start straight away.</string>
+
+	<!-- Support -->
+	<key>SupportTeamName</key>
+	<string>Mac Support</string>
+	<key>SupportTeamPhone</key>
+	<string>+44 (0)20 0000 0000</string>
+	<key>SupportTeamEmail</key>
+	<string>mac-support@example.com</string>
+	<key>SupportTeamWebsite</key>
+	<string>https://support.example.com</string>
+</dict>
+</plist>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- ============================================================
+	     NUDGE profile — one per policy.
+	     Preference domain com.lbg.policynudger.zoom (any name after
+	     "com.lbg.policynudger." works: letters, numbers, . _ -).
+	     Scope it exactly like the Jamf policy it nudges.
+	     Shared settings come from the base profile; any other key
+	     (DeferralOptions, Message, Icon, …) can be added here to
+	     override it for this nudge only.
+	     ============================================================ -->
+
+	<!-- What to install -->
+	<key>NudgeID</key>
+	<string>zoom-6.2-2026-10</string>
+	<key>PolicyTrigger</key>
+	<string>install-zoom</string>
+	<key>PolicyName</key>
+	<string>Zoom 6.2</string>
+	<key>CompletionCheckPath</key>
+	<string>/Applications/zoom.us.app</string>
+	<key>CompletionCheckVersion</key>
+	<string>6.2.0</string>
+
+	<!-- Deadline: the EARLIER of (first seen + days + hours) and HardDeadline wins -->
+	<key>EnforcementDays</key>
+	<integer>5</integer>
+	<key>HardDeadline</key>
+	<string>2026-10-09 17:00</string>
+
+	<!-- Example overrides for this nudge only -->
+	<key>DeferralOptions</key>
+	<string>1h,4h,1d,2d</string>
+	<key>Icon</key>
+	<string>/Applications/zoom.us.app</string>
+</dict>
+</plist>

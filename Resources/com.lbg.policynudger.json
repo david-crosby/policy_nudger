@@ -1,0 +1,247 @@
+{
+  "title": "Policy Nudger",
+  "description": "Use this schema twice: (1) a BASE profile with preference domain com.lbg.policynudger for shared settings, scoped to all Macs; (2) one NUDGE profile per policy with domain com.lbg.policynudger.<name> (e.g. com.lbg.policynudger.zoom), scoped like that policy. Keys set in a nudge profile override the base. Keys marked \"Nudge profile only\" are never inherited from the base.",
+  "properties": {
+    "NudgeID": {
+      "title": "Nudge ID",
+      "description": "Nudge profile only. Unique name for this nudge. Change it to start a fresh nudge (resets first-seen date and deferral count). Letters, numbers, . _ - only. Defaults to the trigger. Must be unique across nudge profiles.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,64}$",
+      "property_order": 5
+    },
+    "PolicyTrigger": {
+      "title": "Policy custom trigger",
+      "description": "Nudge profile only. Custom event of the Jamf Pro policy to run (set the policy frequency to Ongoing).",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,128}$",
+      "property_order": 10
+    },
+    "PolicyID": {
+      "title": "Policy ID",
+      "description": "Nudge profile only. Alternative to the custom trigger: the Jamf Pro policy ID. Ignored if a trigger is set.",
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "property_order": 15
+    },
+    "PolicyName": {
+      "title": "Policy name (shown to users)",
+      "description": "Nudge profile only. Friendly name used in dialog text as {policyName}.",
+      "type": "string",
+      "default": "a required update",
+      "property_order": 20
+    },
+    "CompletionCheckPath": {
+      "title": "Completion check path",
+      "description": "Nudge profile only. Optional. If this path exists the nudge is treated as complete, e.g. /Applications/zoom.us.app.",
+      "type": "string",
+      "property_order": 25
+    },
+    "CompletionCheckVersion": {
+      "title": "Completion check minimum version",
+      "description": "Nudge profile only. Optional. Minimum CFBundleShortVersionString of the app at the completion check path.",
+      "type": "string",
+      "property_order": 30
+    },
+    "EnforcementDays": {
+      "title": "Enforcement (days)",
+      "description": "Days from when the nudge is first seen on a Mac until the policy is forced. Added to Enforcement (hours).",
+      "type": "integer",
+      "default": 7,
+      "minimum": 0,
+      "maximum": 365,
+      "property_order": 35
+    },
+    "EnforcementHours": {
+      "title": "Enforcement (hours)",
+      "description": "Hours added to Enforcement (days).",
+      "type": "integer",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 8760,
+      "property_order": 40
+    },
+    "HardDeadline": {
+      "title": "Hard deadline",
+      "description": "Nudge profile only. Optional absolute deadline in local time, format YYYY-MM-DD HH:MM. The earlier of this and the relative enforcement wins.",
+      "type": "string",
+      "pattern": "^$|^[0-9]{4}-[0-9]{2}-[0-9]{2}[ T][0-9]{2}:[0-9]{2}(:[0-9]{2})?$",
+      "property_order": 45
+    },
+    "DeferralOptions": {
+      "title": "Deferral options",
+      "description": "Comma-separated choices offered to the user, in hours (h) or days (d), e.g. 1h,4h,1d,2d. Choices past the deadline are hidden.",
+      "type": "string",
+      "default": "1h,4h,1d",
+      "property_order": 50
+    },
+    "MaxDeferrals": {
+      "title": "Maximum deferrals",
+      "description": "0 = unlimited until the deadline. Once used up, the next reminder enforces the install.",
+      "type": "integer",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 100,
+      "property_order": 55
+    },
+    "PromptTimeoutMinutes": {
+      "title": "Prompt timeout (minutes)",
+      "description": "An unanswered nudge closes after this long and counts as the shortest deferral (not counted against the maximum).",
+      "type": "integer",
+      "default": 15,
+      "minimum": 1,
+      "maximum": 240,
+      "property_order": 60
+    },
+    "EnforcementCountdownMinutes": {
+      "title": "Enforcement countdown (minutes)",
+      "description": "Countdown shown at the deadline before the install starts.",
+      "type": "integer",
+      "default": 5,
+      "minimum": 1,
+      "maximum": 60,
+      "property_order": 65
+    },
+    "MeetingGraceMinutes": {
+      "title": "Meeting grace (minutes)",
+      "description": "At the deadline, how long to wait for a call or presentation to end. If it has not ended, the policy installs silently without a dialog.",
+      "type": "integer",
+      "default": 60,
+      "minimum": 0,
+      "maximum": 480,
+      "property_order": 70
+    },
+    "FailureRetryMinutes": {
+      "title": "Retry after failure (minutes)",
+      "description": "How long to wait before trying again after a failed install.",
+      "type": "integer",
+      "default": 60,
+      "minimum": 15,
+      "maximum": 1440,
+      "property_order": 75
+    },
+    "MeetingProcesses": {
+      "title": "Meeting processes",
+      "description": "Comma-separated process names that mean the user is in a call (CptHost = Zoom meeting).",
+      "type": "string",
+      "default": "CptHost",
+      "property_order": 80
+    },
+    "AssertionIgnoreList": {
+      "title": "Ignored display-sleep assertion owners",
+      "description": "Comma-separated process names whose display-sleep assertions do NOT count as being in a meeting.",
+      "type": "string",
+      "default": "coreaudiod,powerd,caffeinate,WindowServer",
+      "property_order": 85
+    },
+    "Icon": {
+      "title": "Icon",
+      "description": "swiftDialog icon: local file/app path or SF Symbol (SF=name).",
+      "type": "string",
+      "default": "SF=arrow.down.app.fill,colour=auto",
+      "property_order": 90
+    },
+    "DateFormat": {
+      "title": "Date format",
+      "description": "strftime format for {deadline}.",
+      "type": "string",
+      "default": "+%a %-d %b %Y at %H:%M",
+      "property_order": 95
+    },
+    "Title": {
+      "title": "Title",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 100
+    },
+    "Message": {
+      "title": "Message (Markdown)",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 105
+    },
+    "InfoBox": {
+      "title": "Info box (Markdown)",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 110
+    },
+    "Button1Text": {
+      "title": "Install button",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 115
+    },
+    "Button2Text": {
+      "title": "Defer button",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 120
+    },
+    "DeferralLabel": {
+      "title": "Deferral menu label",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 125
+    },
+    "EnforcementTitle": {
+      "title": "Enforcement title",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 130
+    },
+    "EnforcementMessage": {
+      "title": "Enforcement message (Markdown)",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 135
+    },
+    "InstallingMessage": {
+      "title": "Installing message",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 140
+    },
+    "SuccessMessage": {
+      "title": "Success message",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 145
+    },
+    "FailureMessage": {
+      "title": "Failure message",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 150
+    },
+    "SupportTeamName": {
+      "title": "Support team name",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 155
+    },
+    "SupportTeamPhone": {
+      "title": "Support phone",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 160
+    },
+    "SupportTeamEmail": {
+      "title": "Support email",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 165
+    },
+    "SupportTeamWebsite": {
+      "title": "Support website",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 170
+    },
+    "HelpMessage": {
+      "title": "Help (?) message (Markdown)",
+      "description": "Placeholders: {policyName} {deadline} {timeRemaining} {deferralsRemaining} {deferralsUsed} {maxDeferrals} {countdown} {userFirstName} {userName} {button1Text} {button2Text} {supportTeamName} {supportTeamPhone} {supportTeamEmail} {supportTeamWebsite} {computerName} {serialNumber} {nudgeID}. Leave blank for the built-in default.",
+      "type": "string",
+      "property_order": 175
+    }
+  }
+}
