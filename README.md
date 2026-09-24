@@ -9,8 +9,23 @@ user is in a call or presenting.
 Each policy has its own Configuration Profile, deadline, deferral count and
 state, so several policies can be nudged at once and each is tracked separately.
 
+## Acknowledgements
+
 Structure and security hardening follow the sibling **DDM Update Notifier**
-project.
+project, which is derived from **[DDM OS
+Reminder](https://github.com/dan-snelson/DDM-OS-Reminder)** by **Dan K.
+Snelson** ([snelson.us](https://snelson.us)). Two parts of Policy Nudger come
+from that lineage and were rewritten for this project:
+
+- the call/presentation check based on display-sleep assertions
+  (`pmset -g assertions`)
+- the swiftDialog install and Team ID verification pattern
+
+Thanks to Dan for the original design. DDM OS Reminder is MIT-licensed.
+
+Policy Nudger relies on
+**[swiftDialog](https://github.com/swiftDialog/swiftDialog)** by Bart Reardon
+for all end-user dialogs.
 
 ## How it works
 
